@@ -1,0 +1,47 @@
+This code is another demo of how Spring Data REST can massively simplify code.
+
+The original project had a simply domain object. Then it created a customer Spring MVC controller to create RESTful CRUD ops. Backing the controller was a service layer
+that used raw JDBC code to perform various CRUD ops to a persistent data store.
+
+Issues:
+
+* No build file.
+* Raw JDBC. I haven't seen this since 2006. JdbcTemplate is an awesome tool that lets you only write SQL while letting Spring handle connection management. But in this day and age
+you can simply jump to http://projects.spring.io/spring-data-jpa[Spring Data JPA].
+* Hand written Spring MVC RESTful endpoints. No biggie, except we now have http://projects.spring.io/spring-data-rest[Spring Data REST], a library that automatically exports your 
+domain objects with a RESTful, hypermedia-drive interface.
+* XML-based Spring config and servlet context
+
+I basically threw out the controller, the DAO, and the connection creation library. I edited the domain POJO so that field names matched the getters/setters. (Spring Data couldn't 
+handle such a deviation). No more need for a connection creation library. I then created a `TaskRepository` interface and added a few custom finders. From there, I was able to
+focus all my effort on fixing the Angular front end to talk to the right endpoints. Even though I didn't know a thing about Angular, I was able to fix things up and get the
+app working again.
+
+I create a maven build file, so it's quick and easy to run.
+
+== To run
+
+From the command-line:
+
+----
+$ mvn clean spring-boot:run
+...
+----
+
+Build a runnable JAR
+----
+$ mvn clean package
+$ java -jar target/spring-and-angular-0.0.1-SNAPSHOT.jar
+...
+----
+
+Or from your IDE, run `Application.main`.
+
+From there, navigate to http://localhost:8080/home.
+
+New Issues:
+
+* The front end has a habit of posting to the back end, and then fetching ALL data to re-populate the UI. It would be less taxing and more scaleable if it simply grabbed the
+**Location** header when creating a new item, GET that, and add it to the list.
+* Unfamiliar with Angular's promises. In the step where I do a patch to update `taskArchived` to true, I use a JavaScript forEach statement then re-fetch all the tasks. It would be
+best to wait until ALL tasks are updated to do that. https://github.com/cujojs/when[when.js] is great resource for this.
