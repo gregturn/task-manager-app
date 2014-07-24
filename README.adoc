@@ -1,6 +1,6 @@
 This code is another demo of how Spring Data REST can massively simplify code.
 
-The original project had a simply domain object. Then it created a customer Spring MVC controller to create RESTful CRUD ops. Backing the controller was a service layer
+The original project had a simple domain object. Then it created a customer Spring MVC controller to create RESTful CRUD ops. Backing the controller was a service layer
 that used raw JDBC code to perform various CRUD ops to a persistent data store.
 
 Issues:
@@ -19,7 +19,9 @@ app working again.
 
 I create a maven build file, so it's quick and easy to run.
 
-== To run
+== To run in "dev" mode
+
+This runs things in a local "dev" mode by using the in-memory H2 database.
 
 From the command-line:
 
@@ -38,6 +40,25 @@ $ java -jar target/spring-and-angular-0.0.1-SNAPSHOT.jar
 Or from your IDE, run `Application.main`.
 
 From there, navigate to http://localhost:8080/home.
+
+== To run in "production" mode
+
+NOTE: This runs things in a local "dev" mode by using the in-memory H2 database.
+
+From the command line:
+----
+$ SPRING_PROFILES_ACTIVE=production mvn spring-boot:run
+----
+
+You can also build and run as an executable JAR file:
+
+----
+$ mvn package
+$ java -jar -Dspring.profiles.active=production target/spring-and-angular-0.0.1-SNAPSHOT.jar
+----
+
+WARNING: `-Dspring.profiles.active=production` does NOT work when running `mvn spring-boot:run`.
+
 
 New Issues:
 
